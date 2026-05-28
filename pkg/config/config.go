@@ -23,9 +23,10 @@ const (
 
 // AIAgentConfig holds runtime configuration for AgentCore AI investigations.
 type AIAgentConfig struct {
-	RuntimeARN string `yaml:"runtime_arn"` // AWS ARN of the agent runtime to invoke
-	UserID     string `yaml:"user_id"`     // Used for audit trail only
-	Region     string `yaml:"region"`
+	RuntimeARN      string `yaml:"runtime_arn"`       // AWS ARN of the agent runtime to invoke
+	UserID          string `yaml:"user_id"`           // Used for audit trail only
+	Region          string `yaml:"region"`            // AWS region where AgentCore is deployed
+	InvokerRoleArn  string `yaml:"invoker_role_arn"`  // IAM role ARN to assume for invoking AgentCore
 
 	// Version Metadata (for audit trail in notes/reports)
 	Version            string `yaml:"version,omitempty"`              // Agent runtime version to validate
