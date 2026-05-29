@@ -67,10 +67,6 @@ func (c *Investigation) Run(rb investigation.ResourceBuilder) (investigation.Inv
 
 	aiConfig := c.AIConfig
 
-	// Create context with timeout
-	ctx, cancel := context.WithTimeout(context.TODO(), aiConfig.GetTimeout())
-	defer cancel()
-
 	// Get PagerDuty incident details
 	pdClient, ok := r.PdClient.(*pagerduty.SdkClient)
 	if !ok {
@@ -106,7 +102,7 @@ func (c *Investigation) Run(rb investigation.ResourceBuilder) (investigation.Inv
 
 	// Get AI client (handles role assumption and client creation)
 	// Use incident ID as session identifier for audit trail
-	agentClient, err := aws.GetAIClient(ctx, aiConfig.InvokerRoleArn, aiConfig.Region, incidentID)
+	agentClient, err := aws.GetAIClient(context.TODO(), aiConfig.InvokerRoleArn, aiConfig.Region, incidentID)
 	if err != nil {
 		notes.AppendWarning("Failed to create AI client: %v", err)
 		result.Actions = append(
@@ -135,7 +131,7 @@ func (c *Investigation) Run(rb investigation.ResourceBuilder) (investigation.Inv
 		Accept:           &acceptHeader, // Force streaming response
 	}
 
-	output, err := agentClient.InvokeAgentRuntime(ctx, input)
+	output, err := agentClient.InvokeAgentRuntime(context.TODO(), input)
 	if err != nil {
 		notes.AppendWarning("Failed to invoke AgentCore runtime: %v", err)
 		result.Actions = append(
